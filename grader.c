@@ -30,4 +30,10 @@ int main()
 		exit(1);
 	}
 
+	char buff[BUFF_SIZE];
+	fgets(buff,BUFF_SIZE, file);
+	/*fprintf(stdout, "String read: %s\n", buff);*/
+
+	fclose(file);
+	return 0;
 }
