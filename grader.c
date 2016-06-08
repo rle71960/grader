@@ -8,7 +8,16 @@
 #define BUFF_SIZE 1024
 
 
+void* averageGrade(void * params);
 void *runner(void *param);
+
+struct thread_args
+{
+	/* The count/size of arr */
+	int count;
+	/* The array of grades */
+	int *arr[];
+};
 
 int main()
 {
@@ -64,6 +73,7 @@ int main()
 	array = realloc(array,sizeof (char*) * (n_spaces+1));
 	array[n_spaces] = 0;
 
+	/* TODO: comment me */
 	for( i = 0; i < (n_spaces); ++i)
 	{
 		fprintf(stdout, "%d=%s\n", i, array[i]);
@@ -75,6 +85,7 @@ int main()
 		arr[i] = atoi(array[i]);
 	}
 
+	/* TODO: comment me */
 	for ( i = 0; i < n_spaces; ++i)
 	{
 		fprintf(stdout, "%d=%d\n", i, arr[i]);
@@ -91,22 +102,43 @@ int main()
 	 */
 
 	/* Hold return values */
-	float avg;
-	float min;
-	float max;
+	void* avg;
+	int min;
+	int max;
 	float med;
 	int passed;
+
+        struct thread_args *averageArgs = malloc(sizeof (struct thread_args) + sizeof (int)*n_spaces);
+	averageArgs->count = n_spaces;
+	averageArgs->arr = *arr;
+
+	pthread_create(&average, NULL, &averageGrade, &averageArgs);
+
+	pthread_join(average, &avg);
 /*
-	pthread_join(average, avg);
 	pthread_join(minimum, min);
 	pthread_join(maximum, max);
 	pthread_join(median, med);
 	pthread_join(numPassed, passed);
 */
+	float avg_f = *(float*) avg;
+	fprintf( stdout, "\n\nAverage reported: %f\n", avg_f );
 	free(array);
 	return 0;
 }
 
-float averageGrades(char ** arr)
+void* averageGrade(void* params)
+{
+	struct thread_args* args = (struct thread_args*) params;
+	int total = 0;
+
+	for (int i = 0; i < args->count; ++i)
+	{
+		total += (int)args->arr[i];
+	}
+	float avg = total/args->count;
+}
+
+int minimumGrade(int arr[], int count)
 {
 }
