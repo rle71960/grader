@@ -21,6 +21,8 @@ void* maximumGrade(void * params);
 void* medianGrade(void * params);
 void* numberPassed(void * params);
 
+int compare(const void * a, const void * b);
+
 void *runner(void *param);
 
 int main()
@@ -111,12 +113,13 @@ int main()
 	pthread_create(&average, NULL, &averageGrade, (void*)arr);
 	pthread_create(&minimum, NULL, &minimumGrade, (void*)arr);
 	pthread_create(&maximum, NULL, &maximumGrade, (void*)arr);
+	pthread_create(&median, NULL, &medianGrade, (void*)arr);
 
 	pthread_join(average, NULL);
 	pthread_join(minimum, NULL);
 	pthread_join(maximum, NULL);
-	/*
 	pthread_join(median, NULL);
+	/*
 	pthread_join(numPassed, NULL);
 	*/
 
@@ -124,13 +127,18 @@ int main()
 	fprintf( stdout, "\n\nAverage reported: %f\n", avg );
 	fprintf( stdout, "\nMinimum grade: %d\n", min );
 	fprintf( stdout, "\nMaximum grade: %d\n", max );
-	/*
 	fprintf( stdout, "\nMedian grade: %f\n", med );
+	/*
 	fprintf( stdout, "\nNumber passed: %d\n", passed );
 	*/
 
 	free(array);
 	return 0;
+}
+
+int compare(const void * a, const void * b)
+{
+	return ( *(int*)a - *(int*)b );
 }
 
 void* averageGrade(void* args)
@@ -170,5 +178,30 @@ void* maximumGrade(void* args)
 		{
 			max = val_p[i];
 		}
+	}
+}
+
+void* medianGrade(void* args)
+{
+	int *val_p = (int *) args;
+	int tmp[n_spaces];
+	/* We must sort but first we make a
+	 * tmp array to avoid shared memory
+	 * problems
+	 */
+	for (int i = 0; i < n_spaces; ++i)
+	{
+		tmp[i] = val_p[i];
+	}
+	/* Let's use the stdlib qsort */
+	qsort(tmp, n_spaces, sizeof(int), compare);
+	if (n_spaces % 2 == 0)
+	{
+		int first = n_spaces/2;
+		med = (tmp[first] + tmp[first+1])/2;
+	}
+	else
+	{
+		med = tmp[n_spaces/2];
 	}
 }
