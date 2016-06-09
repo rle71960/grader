@@ -74,11 +74,14 @@ int main()
 	array = realloc(array,sizeof (char*) * (n_spaces+1));
 	array[n_spaces] = 0;
 
+	fprintf(stdout, "Read grades: ");
 	int arr[n_spaces];
 	for ( i = 0; i < n_spaces; ++i)
 	{
 		arr[i] = atoi(array[i]);
+		fprintf(stdout, "%d ", arr[i]);
 	}
+	fprintf(stdout, "\n");
 
 	/* Array loaded, spawn threads for functions */
 	pthread_create(&average, NULL, &averageGrade, (void*)arr);
@@ -93,11 +96,11 @@ int main()
 	pthread_join(median, NULL);
 	pthread_join(numPassed, NULL);
 
-	fprintf( stdout, "\n\nAverage reported: %f\n", avg );
-	fprintf( stdout, "\nMinimum grade: %d\n", min );
-	fprintf( stdout, "\nMaximum grade: %d\n", max );
-	fprintf( stdout, "\nMedian grade: %f\n", med );
-	fprintf( stdout, "\nNumber passed: %d\n", passed );
+	fprintf( stdout, "Average is %.0f\n", avg );
+	fprintf( stdout, "Minimum is %d\n", min );
+	fprintf( stdout, "Maximum is %d\n", max );
+	fprintf( stdout, "Median is %.0f\n", med );
+	fprintf( stdout, "Number of Students Who Pass: %d\n", passed );
 
 	free(array);
 	return 0;
@@ -164,8 +167,8 @@ void* medianGrade(void* args)
 	qsort(tmp, n_spaces, sizeof(int), compare);
 	if (n_spaces % 2 == 0)
 	{
-		int first = n_spaces/2;
-		med = (tmp[first] + tmp[first+1])/2;
+		int mid = n_spaces/2;
+		med = (tmp[mid] + tmp[mid+1])/2;
 	}
 	else
 	{
