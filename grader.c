@@ -23,8 +23,6 @@ void* numberPassed(void * params);
 
 int compare(const void * a, const void * b);
 
-void *runner(void *param);
-
 int main()
 {
 	/* our threads */
