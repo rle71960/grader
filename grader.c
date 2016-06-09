@@ -17,6 +17,10 @@ int passed;
 
 void* averageGrade(void * params);
 void* minimumGrade(void * params);
+void* maximumGrade(void * params);
+void* medianGrade(void * params);
+void* numberPassed(void * params);
+
 void *runner(void *param);
 
 int main()
@@ -106,11 +110,12 @@ int main()
 
 	pthread_create(&average, NULL, &averageGrade, (void*)arr);
 	pthread_create(&minimum, NULL, &minimumGrade, (void*)arr);
+	pthread_create(&maximum, NULL, &maximumGrade, (void*)arr);
 
-	pthread_join(average, NULL); /*&avg); */
+	pthread_join(average, NULL);
 	pthread_join(minimum, NULL);
-	/*
 	pthread_join(maximum, NULL);
+	/*
 	pthread_join(median, NULL);
 	pthread_join(numPassed, NULL);
 	*/
@@ -118,7 +123,8 @@ int main()
 	/*float avg_f = *(float*) avg; */
 	fprintf( stdout, "\n\nAverage reported: %f\n", avg );
 	fprintf( stdout, "\nMinimum grade: %d\n", min );
-	/*fprintf( stdout, "\nMaximum grade: %d\n", max );
+	fprintf( stdout, "\nMaximum grade: %d\n", max );
+	/*
 	fprintf( stdout, "\nMedian grade: %f\n", med );
 	fprintf( stdout, "\nNumber passed: %d\n", passed );
 	*/
@@ -149,6 +155,20 @@ void* minimumGrade(void* args)
 		if( val_p[i] < min )
 		{
 			min = val_p[i];
+		}
+	}
+}
+
+void* maximumGrade(void* args)
+{
+	int *val_p = (int *) args;
+	max = INT_MIN;
+
+	for (int i = 0; i < n_spaces; ++i)
+	{
+		if( max < val_p[i] )
+		{
+			max = val_p[i];
 		}
 	}
 }
