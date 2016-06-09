@@ -1,5 +1,5 @@
 grader: grader.c
-	mkdir bin
+	if [ ! -d "./bin" ]; then mkdir bin; fi
 	gcc -o bin/grader grader.c -lpthread
 	cp ./grades.txt bin/grades.txt
 
